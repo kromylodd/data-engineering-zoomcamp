@@ -7,7 +7,7 @@ WORKDIR /code
 COPY pyproject.toml .python-version uv.lock ./
 RUN uv sync --locked
 
-COPY pipeline.py .
+COPY ingest_data.py .
 
 
-ENTRYPOINT ["uv","run","python", "pipeline.py"]
+ENTRYPOINT ["uv","run","python", "ingest_data.py"]

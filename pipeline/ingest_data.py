@@ -5,6 +5,7 @@
 import pandas as pd
 from sqlalchemy import create_engine
 from tqdm.auto import tqdm
+import click
 
 
 
@@ -36,18 +37,17 @@ parse_dates = [
 prefix = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow'
 
 
-def run():  
-    pg_user = 'root'
-    pg_password = 'root'
-    pg_host = 'localhost'
-    pg_port = 5432
-    pg_database = 'ny_taxi'
-    target_table = 'yellow_taxi_data'
-
-    year = 2021
-    month = 1
-
-    chunksize = 100000
+@click.command()
+@click.option('--pg_user', default='root', help='PostgreSQL user')
+@click.option('--pg_password', default='root', help='PostgreSQL password')
+@click.option('--pg_host', default='localhost', help='PostgreSQL host')
+@click.option('--pg_port', default=5432, type=int, help='PostgreSQL port')
+@click.option('--pg_database', default='ny_taxi', help='PostgreSQL database name')
+@click.option('--target_table', default='yellow_taxi_data', help='Target table name')
+@click.option('--year', default=2021, type=int, help='Year for data ingestion')
+@click.option('--month', default=1, type=int, help='Month for data ingestion')
+@click.option('--chunksize', default=100000, type=int, help='Chunk size for data ingestion')
+def run(pg_user, pg_password, pg_host, pg_port, pg_database, target_table, year, month, chunksize):  
     engine = create_engine(f'postgresql://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_database}')
     
     df_iter = pd.read_csv(
@@ -73,8 +73,6 @@ def run():
             con=engine,
             if_exists='append'
         )
-
-
 
 
 if __name__ == '__main__':
