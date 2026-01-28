@@ -12,6 +12,19 @@ services:
       - "5432:5432"
     networks:
       - pg-network
+  homework:
+    image: python:3.13
+    container_name: homework
+    volumes:
+      - ./homework:/workspace
+    working_dir: /workspace
+    entrypoint: bash
+    tty: true
+    stdin_open: true
+    networks:
+      - pg-network
+  
+
 
   pgadmin:
     image: dpage/pgadmin4
